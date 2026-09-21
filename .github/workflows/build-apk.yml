@@ -42,6 +42,7 @@ jobs:
         run: |
           unzip -o boss_swordsman_godot_prototype_v01.zip
           sed -i 's/handheld\/orientation=1/handheld\/orientation=0/' boss_swordsman_godot_prototype/project.godot
+          echo 'textures/vram_compression/import_etc2_astc=true' >> boss_swordsman_godot_prototype/project.godot
 
       - name: Create Android preset
         run: |
