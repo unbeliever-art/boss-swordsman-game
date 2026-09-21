@@ -1,0 +1,85 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Godot
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mkdir -p ~/.config
+          if [ -d /root/.config/godot ]; then
+            mv /root/.config/godot ~/.config/godot
+          fi
+          if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
+            mv /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+          fi
+
+      - name: Unpack game
+        run: |
+          unzip -o boss_swordsman_godot_prototype_v01.zip
+          sed -i 's/handheld\/orientation=1/handheld\/orientation=0/' boss_swordsman_godot_prototype/project.godot
+
+      - name: Create Android preset
+        run: |
+          cat > boss_swordsman_godot_prototype/export_presets.cfg <<'EOF'
+          [preset.0]
+
+          name="Android"
+          platform="Android"
+          runnable=true
+          advanced_options=false
+          dedicated_server=false
+          custom_features=""
+          export_filter="all_resources"
+          include_filter=""
+          exclude_filter=""
+          export_path=""
+          encryption_include_filters=""
+          encryption_exclude_filters=""
+          encrypt_pck=false
+          encrypt_directory=false
+          script_export_mode=2
+
+          [preset.0.options]
+
+          custom_template/debug=""
+          custom_template/release=""
+          gradle_build/use_gradle_build=false
+          architectures/armeabi-v7a=false
+          architectures/arm64-v8a=true
+          architectures/x86=false
+          architectures/x86_64=false
+          version/code=1
+          version/name="0.1"
+          package/unique_name="com.unbelieverart.bossswordsman"
+          package/name="Boss Swordsman Prototype"
+          package/signed=true
+          screen/immersive_mode=true
+          screen/orientation=0
+          EOF
+
+      - name: Build APK
+        run: |
+          mkdir -p build/android
+          cd boss_swordsman_godot_prototype
+          godot --headless --editor --quit
+          godot --headless --verbose --export-debug "Android" ../build/android/BossSwordsman-Prototype-v0.1.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: BossSwordsman-Prototype-v0.1-APK
+          path: build/android/BossSwordsman-Prototype-v0.1.apk
+          if-no-files-found: error
