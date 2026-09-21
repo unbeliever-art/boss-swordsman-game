@@ -107,6 +107,7 @@ jobs:
         run: |
           mkdir -p builds
           cp build/android/BossSwordsman-Prototype-v0.2.apk builds/BossSwordsman-Prototype-v0.2.apk
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add builds/BossSwordsman-Prototype-v0.2.apk
