@@ -35,6 +35,8 @@ jobs:
           export/android/timestamping_authority_url = ""
           export/android/shutdown_adb_on_exit = true
           EOF
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - name: Unpack game
         run: |
@@ -65,7 +67,6 @@ jobs:
           custom_template/debug=""
           custom_template/release=""
           gradle_build/use_gradle_build=false
-          gradle_build/target_sdk="33"
           architectures/armeabi-v7a=false
           architectures/arm64-v8a=true
           architectures/x86=false
