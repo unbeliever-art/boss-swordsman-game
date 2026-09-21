@@ -15,16 +15,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Godot
+      - name: Setup Godot and Android SDK
         run: |
           mkdir -p ~/.local/share/godot/export_templates
-          mkdir -p ~/.config
-          if [ -d /root/.config/godot ]; then
-            mv /root/.config/godot ~/.config/godot
-          fi
+          mkdir -p ~/.config/godot
           if [ -d /root/.local/share/godot/export_templates/4.3.stable ]; then
-            mv /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/4.3.stable
+            cp -a /root/.local/share/godot/export_templates/4.3.stable ~/.local/share/godot/export_templates/
           fi
+          cat > ~/.config/godot/editor_settings-4.3.tres <<'EOF'
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/java_sdk_path = "/usr/lib/jvm/java-17-openjdk-amd64"
+          export/android/android_sdk_path = "/usr/lib/android-sdk"
+          export/android/debug_keystore = "/root/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          export/android/force_system_user = false
+          export/android/timestamping_authority_url = ""
+          export/android/shutdown_adb_on_exit = true
+          EOF
 
       - name: Unpack game
         run: |
@@ -35,7 +45,6 @@ jobs:
         run: |
           cat > boss_swordsman_godot_prototype/export_presets.cfg <<'EOF'
           [preset.0]
-
           name="Android"
           platform="Android"
           runnable=true
@@ -53,7 +62,6 @@ jobs:
           script_export_mode=2
 
           [preset.0.options]
-
           custom_template/debug=""
           custom_template/release=""
           gradle_build/use_gradle_build=false
@@ -72,6 +80,9 @@ jobs:
 
       - name: Build APK
         run: |
+          test -f /root/debug.keystore
+          test -x /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+          test -d /usr/lib/android-sdk
           mkdir -p build/android
           cd boss_swordsman_godot_prototype
           godot --headless --editor --quit
