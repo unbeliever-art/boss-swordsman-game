@@ -76,8 +76,8 @@ jobs:
           architectures/arm64-v8a=true
           architectures/x86=false
           architectures/x86_64=false
-          version/code=8
-          version/name="0.7"
+          version/code=9
+          version/name="0.8"
           package/unique_name="com.unbelieverart.bossswordsman"
           package/name="Boss Swordsman Prototype"
           package/signed=true
@@ -93,22 +93,22 @@ jobs:
           mkdir -p build/android
           cd boss_swordsman_godot_prototype
           godot --headless --editor --quit
-          godot --headless --verbose --export-debug "Android" ../build/android/BossSwordsman-Prototype-v0.7.apk
+          godot --headless --verbose --export-debug "Android" ../build/android/BossSwordsman-Prototype-v0.8.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: BossSwordsman-Prototype-v0.7-APK
-          path: build/android/BossSwordsman-Prototype-v0.7.apk
+          name: BossSwordsman-Prototype-v0.8-APK
+          path: build/android/BossSwordsman-Prototype-v0.8.apk
           if-no-files-found: error
 
       - name: Save direct APK in repository
         run: |
           mkdir -p builds
-          cp build/android/BossSwordsman-Prototype-v0.7.apk builds/BossSwordsman-Prototype-v0.7.apk
+          cp build/android/BossSwordsman-Prototype-v0.8.apk builds/BossSwordsman-Prototype-v0.8.apk
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add builds/BossSwordsman-Prototype-v0.7.apk
-          git commit -m "Add direct APK v0.7" || exit 0
+          git add builds/BossSwordsman-Prototype-v0.8.apk
+          git commit -m "Add direct APK v0.8" || exit 0
           git push
