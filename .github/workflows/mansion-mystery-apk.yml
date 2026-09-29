@@ -27,7 +27,7 @@ jobs:
           apt-get install -y -qq curl unzip
           mkdir -p ~/.local/share/godot/export_templates/4.3.stable ~/.config/godot
           if [ ! -f ~/.local/share/godot/export_templates/4.3.stable/android_debug.apk ]; then
-            curl -fL --retry 3 https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_export_templates.tpz -o /tmp/godot-templates.tpz
+            curl -fL --retry 3 https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz -o /tmp/godot-templates.tpz
             mkdir -p /tmp/godot-templates
             unzip -oq /tmp/godot-templates.tpz -d /tmp/godot-templates
             cp -a /tmp/godot-templates/templates/. ~/.local/share/godot/export_templates/4.3.stable/
