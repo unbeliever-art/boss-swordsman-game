@@ -55,21 +55,21 @@ jobs:
 
       - name: Build APK
         run: |
-          mkdir -p build/android
-          godot --headless --verbose --path mansion_mystery_godot --export-debug "Android" build/android/MansionMystery-Episode1-v0.1.apk
+          mkdir -p mansion_mystery_godot/build/android
+          godot --headless --verbose --path mansion_mystery_godot --export-debug "Android" mansion_mystery_godot/build/android/MansionMystery-Episode1-v0.1.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: MansionMystery-Episode1-APK
-          path: build/android/MansionMystery-Episode1-v0.1.apk
+          path: mansion_mystery_godot/build/android/MansionMystery-Episode1-v0.1.apk
           if-no-files-found: error
 
       - name: Save APK in repository
         run: |
-          test -f build/android/MansionMystery-Episode1-v0.1.apk
+          test -f mansion_mystery_godot/build/android/MansionMystery-Episode1-v0.1.apk
           mkdir -p builds
-          cp build/android/MansionMystery-Episode1-v0.1.apk builds/MansionMystery-Episode1-v0.1.apk
+          cp mansion_mystery_godot/build/android/MansionMystery-Episode1-v0.1.apk builds/MansionMystery-Episode1-v0.1.apk
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
